@@ -1,24 +1,32 @@
 'use strict';
 const { Model } = require('sequelize');
+const { TRANSACTION_OPERATION_TYPES } = require('../constants');
+
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate (models) {
-      // define association here
+      Transaction.belongsTo(model.Users, { foreignKey: 'useeId' });
     }
   }
   Transaction.init(
     {
-      operationType: {type: DataTypes.ENUM('INCOME', 'EXPENSE'),allowNull: false}
-      amount: DataTypes.DECIMAL,
+      operationType: {
+        type: DataTypes.ENUM(
+          TRANSACTION_OPERATION_TYPES.EXPENSE,
+          TRANSACTION_OPERATION_TYPES.INCOME
+        ),
+        allowNull: false,
+      },
+      amount: {
+        type: DataTypes.DECIMAL,
+        validate: { min: 0 },
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: 'Transactions',
+      timestamps: true,
     }
   );
   return Transaction;

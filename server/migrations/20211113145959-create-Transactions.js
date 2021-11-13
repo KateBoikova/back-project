@@ -1,4 +1,6 @@
 'use strict';
+const { TRANSACTION_OPERATION_TYPES } = require('../constants');
+
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface
