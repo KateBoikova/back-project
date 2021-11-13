@@ -7,22 +7,24 @@ const upload = require('./../utils/fileUpload');
 const contestRouter = Router();
 
 contestRouter.get(
-  '/',
+  '/customers/',
   checkToken.checkToken,
   contestController.getCustomersContests
 );
 
 contestRouter.get(
-  '/getContestById',
+  '/contest/:contestId',
   checkToken.checkToken,
   basicMiddlewares.canGetContest,
+
   contestController.getContestById
 );
 
 contestRouter.get(
-  '/getAllContests',
+  '/',
   checkToken.checkToken,
   basicMiddlewares.onlyForCreative,
+  basicMiddlewares.parseQuery,
   contestController.getContests
 );
 

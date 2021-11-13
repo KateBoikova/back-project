@@ -3,6 +3,7 @@ const NotFound = require('../errors/UserNotFoundError');
 const RightsError = require('../errors/RightsError');
 const ServerError = require('../errors/ServerError');
 const CONSTANTS = require('../constants');
+const { mapStringToValues } = require('../utils/functions');
 
 module.exports.parseBody = (req, res, next) => {
   req.body.contests = JSON.parse(req.body.contests);
@@ -18,15 +19,19 @@ module.exports.parseBody = (req, res, next) => {
 
 module.exports.canGetContest = async (req, res, next) => {
   let result = null;
+  const {
+    params: { contestId },
+    tokenData: { userId, role },
+  } = req;
   try {
     if (req.tokenData.role === CONSTANTS.CUSTOMER) {
       result = await bd.Contests.findOne({
-        where: { id: req.headers.contestid, userId: req.tokenData.userId },
+        where: { id: contestId, userId: userId },
       });
-    } else if (req.tokenData.role === CONSTANTS.CREATOR) {
+    } else if (role === CONSTANTS.CREATOR) {
       result = await bd.Contests.findOne({
         where: {
-          id: req.headers.contestid,
+          id: contestId,
           status: {
             [bd.Sequelize.Op.or]: [
               CONSTANTS.CONTEST_STATUS_ACTIVE,
@@ -115,4 +120,12 @@ module.exports.canUpdateContest = async (req, res, next) => {
   } catch (e) {
     next(new ServerError());
   }
+};
+
+module.exports.parseQuery = (req, res, next) => {
+  const { query } = req;
+  Object.keys(query).forEach(key => {
+    req.query[key] = mapStringToValues(query[key]);
+  });
+  next();
 };

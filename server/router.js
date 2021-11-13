@@ -8,7 +8,10 @@ const validators = require('./middlewares/validators');
 const chatController = require('./controllers/chatController');
 const upload = require('./utils/fileUpload');
 const contestRouter = require('./routes/contestRouter');
+const offerController = require('./controllers/offerController');
 const router = express.Router();
+
+router.get('offres', offerController.getOffers);
 
 router.post(
   '/registration',
