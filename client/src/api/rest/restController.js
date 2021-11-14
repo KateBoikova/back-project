@@ -39,7 +39,7 @@ export const updateContest = data =>
   http.patch('/contests/updateContest', data);
 
 export const getActiveContests = data =>
-  http.get(`/contests?{queryString.stringify(data)}`);
+  http.get(`/contests?${queryString.stringify(data)}`);
 
 export const getContestById = ({ contestId }) =>
   http.get(`/contests/contest/${contestId}`);

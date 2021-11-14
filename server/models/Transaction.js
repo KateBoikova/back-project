@@ -5,7 +5,7 @@ const { TRANSACTION_OPERATION_TYPES } = require('../constants');
 module.exports = (sequelize, DataTypes) => {
   class Transaction extends Model {
     static associate (models) {
-      Transaction.belongsTo(model.Users, { foreignKey: 'useeId' });
+      Transaction.belongsTo(models.Users, { foreignKey: 'userId' });
     }
   }
   Transaction.init(
